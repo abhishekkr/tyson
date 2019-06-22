@@ -1,0 +1,4 @@
+github.com/abhishekkr/gol v0.0.0-20190521150739-02d651656040 h1:xTE4y2n3iKaNoCFRxz5H4zggCUc5m6mbckMpsscwaio=
+github.com/abhishekkr/gol v0.0.0-20190521150739-02d651656040/go.mod h1:h4WXhmCRa7182j8XRqs/wt3xvid7E1j6vgCi0eEQaDQ=
+github.com/go-redis/redis v6.15.2+incompatible h1:9SpNVG76gr6InJGxoZ6IuuxaCOQwDAhzyXg+Bs+0Sb4=
+github.com/go-redis/redis v6.15.2+incompatible/go.mod h1:NAIEuMOZ/fxfXJIrKDQDz8wamY7mA7PouImQ2Jvg6kA=
