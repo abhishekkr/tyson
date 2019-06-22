@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 
 	"github.com/abhishekkr/tyson/service"
@@ -22,5 +23,6 @@ func main() {
 		svc.Execute()
 	default:
 		svc.Help()
+		fmt.Println("\nConcurrent Request Limit can be set via environment variable 'TYSON_CONCURRENCY_LIMIT', default: 1000")
 	}
 }

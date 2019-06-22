@@ -68,7 +68,7 @@ func (svc *RedisService) Execute() {
 	fmt.Printf("starting to run %d count of %s calls", valCount, RedisCall)
 	for idx := 0; idx < valCount; {
 		var wg sync.WaitGroup
-		for limit := 1000; limit > 0 && idx < valCount; limit-- {
+		for limit := ConcurrencyLimit; limit > 0 && idx < valCount; limit-- {
 			wg.Add(1)
 			go RedisCalls[RedisCall](idx, &wg)
 			idx++

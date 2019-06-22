@@ -1,5 +1,14 @@
 package service
 
+import (
+	"github.com/abhishekkr/gol/golconv"
+	"github.com/abhishekkr/gol/golenv"
+)
+
+var (
+	ConcurrencyLimit = golconv.StringToInt(golenv.OverrideIfEnv("TYSON_CONCURRENCY_LIMIT", ""), 1000)
+)
+
 type Service interface {
 	Ping() error
 	Execute()
