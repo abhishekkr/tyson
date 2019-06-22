@@ -4,7 +4,7 @@
 * Show Help
 
 ```
-$ GO111MODULE=on go run tyson.go --mode help
+$ tyson -service redis -mode help
 
 Configurable Redis env-vars for Tyson are:
 * TYSON_REDIS_HOST:         default(127.0.01:6379)
@@ -21,7 +21,7 @@ Configurable Redis env-vars for Tyson are:
 * Ping, check availability
 
 ```
-$ GO111MODULE=on go run tyson.go --mode ping
+$ tyson -service redis -mode ping
 
 PONG
 ```
@@ -31,26 +31,25 @@ PONG
 
 ```
 ## set
-$ TYSON_REDIS_Calls=set GO111MODULE=on go run tyson.go
+$ TYSON_REDIS_Calls=set GO111MODULE=on tyson -service redis -mode execute
 
 ## set 100 keys only
-$ TYSON_REDIS_Calls=set TYSON_REDIS_VALUE_COUNT=100 GO111MODULE=on go run tyson.go
+$ TYSON_REDIS_Calls=set TYSON_REDIS_VALUE_COUNT=100 tyson -service redis -mode execute
 
 ## set 1000 keys, with prefix 'order-number'
-$ TYSON_REDIS_Calls=set TYSON_REDIS_VALUE_COUNT=100 TYSON_REDIS_KEY='order-number' GO111MODULE=on go run tyson.go
+$ TYSON_REDIS_Calls=set TYSON_REDIS_VALUE_COUNT=100 TYSON_REDIS_KEY='order-number' tyson -service redis -mode execute
 
 ## get
-$ TYSON_REDIS_Calls=get GO111MODULE=on go run tyson.go
+$ TYSON_REDIS_Calls=get GO111MODULE=on tyson -service redis -mode execute
 
 ## del
-$ TYSON_REDIS_Calls=del GO111MODULE=on go run tyson.go
+$ TYSON_REDIS_Calls=del tyson -service redis -mode execute
 
 ## sadd
-$ TYSON_REDIS_Calls=sadd GO111MODULE=on go run tyson.go
+$ TYSON_REDIS_Calls=sadd tyson -service redis -mode execute
 
 ## smembers
-$ TYSON_REDIS_Calls=smembers GO111MODULE=on go run tyson.go
-
+$ TYSON_REDIS_Calls=smembers tyson -service redis -mode execute
 ```
 
 
