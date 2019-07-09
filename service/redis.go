@@ -2,24 +2,23 @@ package service
 
 import (
 	"fmt"
-	"log"
 	"sync"
 	"time"
 
 	"github.com/abhishekkr/gol/golconv"
 	"github.com/abhishekkr/gol/golenv"
+	"github.com/abhishekkr/gol/gollog"
 	"github.com/go-redis/redis"
 )
 
 var (
-	RedisHost       = golenv.OverrideIfEnv("TYSON_REDIS_HOST", "127.0.0.1:6379")
-	RedisPassword   = golenv.OverrideIfEnv("TYSON_REDIS_PASSWORD", "")
-	RedisDB         = golenv.OverrideIfEnv("TYSON_REDIS_DB", "0")
-	RedisKey        = golenv.OverrideIfEnv("TYSON_REDIS_KEY", "tyson")
-	RedisKeyExpiry  = time.Duration(golconv.StringToInt(golenv.OverrideIfEnv("TYSON_REDIS_KEY_EXPIRY", ""), 0))
-	RedisValPrefix  = golenv.OverrideIfEnv("TYSON_REDIS_VALUE_PREFIX", "peek-a-boo")
-	RedisValueCount = golenv.OverrideIfEnv("TYSON_REDIS_VALUE_COUNT", "5000000")
-	RedisCall       = golenv.OverrideIfEnv("TYSON_REDIS_Calls", "set")
+	RedisHost      = golenv.OverrideIfEnv("TYSON_REDIS_HOST", "127.0.0.1:6379")
+	RedisPassword  = golenv.OverrideIfEnv("TYSON_REDIS_PASSWORD", "")
+	RedisDB        = golenv.OverrideIfEnv("TYSON_REDIS_DB", "0")
+	RedisKey       = golenv.OverrideIfEnv("TYSON_REDIS_KEY", "tyson")
+	RedisKeyExpiry = time.Duration(golconv.StringToInt(golenv.OverrideIfEnv("TYSON_REDIS_KEY_EXPIRY", ""), 0))
+	RedisValPrefix = golenv.OverrideIfEnv("TYSON_REDIS_VALUE_PREFIX", "peek-a-boo")
+	RedisCall      = golenv.OverrideIfEnv("TYSON_REDIS_CALL", "set")
 
 	RedisCalls = map[string]func(int, *sync.WaitGroup){}
 )
@@ -30,7 +29,7 @@ init registers Redis to ServiceEngines.
 func init() {
 	db := golconv.StringToInt(RedisDB, 0)
 	if db < 0 || db > 15 {
-		log.Printf("[warning] wrong redis db: %d available, using 0", db)
+		gollog.Warnf("wrong redis db: %d available, using 0", db)
 		db = 0
 	}
 
@@ -50,7 +49,11 @@ func init() {
 }
 
 type RedisService struct {
-	Client *redis.Client
+	Client     *redis.Client
+	StartTime  time.Time
+	EndTime    time.Time
+	ErrorCount uint64
+	sync.Mutex
 }
 
 func (svc *RedisService) Ping() error {
@@ -64,18 +67,29 @@ func (svc *RedisService) Ping() error {
 }
 
 func (svc *RedisService) Execute() {
-	valCount := golconv.StringToInt(RedisValueCount, 5000000)
-	fmt.Printf("starting to run %d count of %s calls", valCount, RedisCall)
-	for idx := 0; idx < valCount; {
+	gollog.Infof("starting to run %d count of %s calls", MaxRequests, RedisCall)
+	svc.StartTime = time.Now()
+	for idx := 0; idx < MaxRequests; {
 		var wg sync.WaitGroup
-		for limit := ConcurrencyLimit; limit > 0 && idx < valCount; limit-- {
+		for limit := ConcurrencyLimit; limit > 0 && idx < MaxRequests; limit-- {
 			wg.Add(1)
 			go RedisCalls[RedisCall](idx, &wg)
 			idx++
 		}
 		wg.Wait()
 	}
-	fmt.Printf("done %s for %d entries\n", RedisCall, valCount)
+	svc.EndTime = time.Now()
+	gollog.Infof("done %s for %d entries\n", RedisCall, MaxRequests)
+	fmt.Printf(`
+Started: %s
+Finished: %s
+
+Total Requests: %d
+Total Errors:   %d
+`, svc.StartTime.Format(time.RFC3339),
+		svc.EndTime.Format(time.RFC3339),
+		MaxRequests,
+		svc.ErrorCount)
 }
 
 func (svc *RedisService) Help() {
@@ -89,49 +103,55 @@ func (svc *RedisService) Help() {
 * TYSON_REDIS_VALUE_PREFIX: default("peek-a-boo")
 * TYSON_REDIS_VALUE_COUNT:  default(5000000)
 `)
+	help()
+}
+
+func (svc *RedisService) check_error(index int, err error) {
+	if err == nil {
+		return
+	}
+	svc.Lock()
+	svc.ErrorCount++
+	svc.Unlock()
+	gollog.Warnf("failed at index %d for: %s", index, err)
 }
 
 func (svc *RedisService) set(index int, wg *sync.WaitGroup) {
 	key := fmt.Sprintf("%s-%d", RedisKey, index)
 	val := fmt.Sprintf("%s-%d", RedisValPrefix, index)
 	result := svc.Client.Set(key, val, RedisKeyExpiry)
-	if result.Err() != nil {
-		log.Printf("[error] %s\n", result.Err())
-	}
+	svc.check_error(index, result.Err())
 	wg.Done()
+	gollog.Infof("done %s for index: %d", RedisCall, index)
 }
 
 func (svc *RedisService) get(index int, wg *sync.WaitGroup) {
 	key := fmt.Sprintf("%s-%d", RedisKey, index)
 	result := svc.Client.Get(key)
-	if result.Err() != nil {
-		log.Printf("[error] %s\n", result.Err())
-	}
+	svc.check_error(index, result.Err())
 	wg.Done()
+	gollog.Infof("done %s for index: %d", RedisCall, index)
 }
 
 func (svc *RedisService) del(index int, wg *sync.WaitGroup) {
 	key := fmt.Sprintf("%s-%d", RedisKey, index)
 	result := svc.Client.Del(key)
-	if result.Err() != nil {
-		log.Printf("[error] %s\n", result.Err())
-	}
+	svc.check_error(index, result.Err())
 	wg.Done()
+	gollog.Infof("done %s for index: %d", RedisCall, index)
 }
 
 func (svc *RedisService) sadd(index int, wg *sync.WaitGroup) {
 	val := fmt.Sprintf("%s-%d", RedisValPrefix, index)
 	result := svc.Client.SAdd(RedisKey, val)
-	if result.Err() != nil {
-		log.Printf("[error] %s\n", result.Err())
-	}
+	svc.check_error(index, result.Err())
 	wg.Done()
+	gollog.Infof("done %s for index: %d", RedisCall, index)
 }
 
 func (svc *RedisService) smembers(index int, wg *sync.WaitGroup) {
 	result := svc.Client.SMembers(RedisKey)
-	if result.Err() != nil {
-		log.Printf("[error] failed for index:%s\n%s\n", index, result.Err())
-	}
+	svc.check_error(index, result.Err())
 	wg.Done()
+	gollog.Infof("done %s for index: %d", RedisCall, index)
 }

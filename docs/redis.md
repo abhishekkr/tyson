@@ -14,7 +14,9 @@ Configurable Redis env-vars for Tyson are:
 * TYSON_REDIS_KEY:          default("tyson")
 * TYSON_REDIS_KEY_EXPIRY:   default(0), whatever Duration wanna give for set key expiration
 * TYSON_REDIS_VALUE_PREFIX: default("peek-a-boo")
-* TYSON_REDIS_VALUE_COUNT:  default(5000000)
+
+* TYSON_MAX_REQUESTS:       default(5000000), maximum requests to be made
+* TYSON_CONCURRENCY_LIMIT:  default(1000), concurrent request made to achieve max-requests
 ```
 
 
