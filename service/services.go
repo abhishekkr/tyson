@@ -47,7 +47,7 @@ func ping(hostPort string) error {
 	conn, err := net.DialTimeout("tcp", hostPort, timeout)
 	defer conn.Close()
 	if err == nil {
-		fmt.Println("pong")
+		fmt.Println("PONG")
 	} else {
 		fmt.Println(err.Error())
 	}
@@ -55,7 +55,7 @@ func ping(hostPort string) error {
 }
 
 func help() {
-	fmt.Println(`Configurable Redis env-vars for Tyson are:
+	fmt.Println(`Configurable common env-vars for Tyson are:
 * TYSON_MAX_REQUESTS:       default("5000000")  ## count of max requests made
 * TYSON_CONCURRENCY_LIMIT:  default("1000") ## count of max concurrent requests made
 

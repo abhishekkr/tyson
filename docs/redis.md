@@ -15,8 +15,11 @@ Configurable Redis env-vars for Tyson are:
 * TYSON_REDIS_KEY_EXPIRY:   default(0), whatever Duration wanna give for set key expiration
 * TYSON_REDIS_VALUE_PREFIX: default("peek-a-boo")
 
+Configurable common env-vars for Tyson are:
 * TYSON_MAX_REQUESTS:       default(5000000), maximum requests to be made
 * TYSON_CONCURRENCY_LIMIT:  default(1000), concurrent request made to achieve max-requests
+
+* GOLLOG_LOG_LEVEL:         default("5") # set to 0, 1 or 2 for minimal logs, as Logrus
 ```
 
 
@@ -33,7 +36,7 @@ PONG
 
 ```
 ## set
-$ TYSON_REDIS_Calls=set GO111MODULE=on tyson -service redis -mode execute
+$ TYSON_REDIS_Calls=set tyson -service redis -mode execute
 
 ## set 100 keys only
 $ TYSON_REDIS_Calls=set TYSON_REDIS_VALUE_COUNT=100 tyson -service redis -mode execute

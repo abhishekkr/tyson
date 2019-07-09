@@ -9,7 +9,7 @@
 
 * [Redis](./docs/redis.md)
 
-> for any service, can configure default service connection count using env var `TYSON_CONCURRENCY_LIMIT`, default `1000`
+* [HTTP](./docs/http.md)
 
 ---
 

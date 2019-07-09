@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	serviceName := flag.String("service", "redis", "tyson run mode: redis")
+	serviceName := flag.String("service", "redis", "tyson run mode: redis/http")
 	mode := flag.String("mode", "execute", "service run mode: execute/ping/help")
 	flag.Parse()
 	svc := service.ServiceEngines[*serviceName]

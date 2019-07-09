@@ -2,6 +2,8 @@ github.com/abhishekkr/gol v0.0.0-20190521150739-02d651656040 h1:xTE4y2n3iKaNoCFR
 github.com/abhishekkr/gol v0.0.0-20190521150739-02d651656040/go.mod h1:h4WXhmCRa7182j8XRqs/wt3xvid7E1j6vgCi0eEQaDQ=
 github.com/abhishekkr/gol v0.0.0-20190623184715-a1a7c4342b33 h1:Ch3ymkwEgN2ntLCjlSc3XKnUFyOk7cnt89ZuiySYjJE=
 github.com/abhishekkr/gol v0.0.0-20190623184715-a1a7c4342b33/go.mod h1:h4WXhmCRa7182j8XRqs/wt3xvid7E1j6vgCi0eEQaDQ=
+github.com/abhishekkr/gol v0.0.0-20190709185023-607befda4a55 h1:u3PWkOi2QVSJoBY3MGpMsn4clGcvf7kOaOYzUJUF7l4=
+github.com/abhishekkr/gol v0.0.0-20190709185023-607befda4a55/go.mod h1:h4WXhmCRa7182j8XRqs/wt3xvid7E1j6vgCi0eEQaDQ=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/gin-contrib/sse v0.0.0-20190301062529-5545eab6dad3 h1:t8FVkw33L+wilf2QiWkw0UV77qRpcH/JHPKGpKa2E8g=
@@ -13,6 +15,7 @@ github.com/go-redis/redis v6.15.2+incompatible/go.mod h1:NAIEuMOZ/fxfXJIrKDQDz8w
 github.com/golang/protobuf v1.3.1 h1:YF8+flBXS5eO826T4nzqPrxfhQThhXl0YzfuUPu4SBg=
 github.com/golang/protobuf v1.3.1/go.mod h1:6lQm79b+lXiMfvg/cZm0SGofjICqVBUtrP5yJMmIC1U=
 github.com/json-iterator/go v1.1.6/go.mod h1:+SdeFBvtyEkXs7REEP0seUULqWtbJapLOCVDaaPEHmU=
+github.com/konsorten/go-windows-terminal-sequences v1.0.1 h1:mweAR1A6xJ3oS2pRaGiHgQ4OO8tzTaLawm8vnODuwDk=
 github.com/konsorten/go-windows-terminal-sequences v1.0.1/go.mod h1:T0+1ngSBFLxvqU3pZ+m/2kptfBszLMUkC4ZK/EgS/cQ=
 github.com/mattn/go-isatty v0.0.7 h1:UvyT9uN+3r7yLEYSlJsbQGdsaB/a0DlgWP3pql6iwOc=
 github.com/mattn/go-isatty v0.0.7/go.mod h1:Iq45c/XA43vh69/j3iqttzPXn0bhXyGjM0Hdxcsrc5s=
